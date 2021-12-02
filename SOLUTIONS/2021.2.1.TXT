@@ -4,7 +4,7 @@
 /    |    \|    `   \     /   |        \/    |    \    |    /    |    \|     \     |        \ /     \/    |    \
 \____|__  /_______  /\___/   /_______  /\____|__  /____|    \_______  /\___  /    /_______  //___/\  \____|__  /
         \/        \/                 \/         \/                  \/     \/             \/       \_/       \/
-                                    ADVENT OF EXA 2021 DAY 1 PART 1 SOLUTION
+                                    ADVENT OF EXA 2021 DAY 2 PART 1 SOLUTION
 
 ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
 ║                __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|     \                 ║
@@ -12,29 +12,59 @@
 ║               ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    _/  _\               ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 
-NOTE READER+SUMMER
+NOTE GLOBAL M IS HORIZ
+NOTE LOCAL M IS DEPTH
 LINK 800
 GRAB 200
-
-NOTE FIRST MEASUREMENT
-COPY F X
-ADDI F X X
-JUMP START
-
 MARK LOOP
-SEEK -3
-SUBI X F X
-SEEK 2
-MARK START
-ADDI F X X
-COPY X M
+NOTE CHECK EOF
 TEST EOF
-FJMP LOOP
+TJMP DONE
 
-NOTE DONE
-LINK -1
+NOTE POP COMMAND
+COPY F X
+SEEK -1
+VOID F
+DROP
+
+NOTE PARSE COMMAND
+GRAB 201
+TEST X = F
+TJMP FORWARD
+TEST X = F
+DROP
+GRAB 200
 MODE
-COPY 1 M
+TJMP UP
+
+NOTE ASSUME DOWN
+COPY F M
+MODE
+JUMP LOOPEND
+
+MARK FORWARD
+DROP
+GRAB 200
+COPY F M
+JUMP LOOPEND
+
+MARK UP
+COPY F X
+MULI X -1 M
+MODE
+NOTE FALLTHROUGH LOOPEND
+
+MARK LOOPEND
+SEEK -1
+VOID F
+JUMP LOOP
+
+MARK DONE
+COPY 0 M
+COPY M X
+MODE
+COPY 0 M
+MULI M X #OUTP
 
 ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
 ║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|   _ )                ║
@@ -42,39 +72,23 @@ COPY 1 M
 ║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    ___/                ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 
-NOTE INCREASE CHECKER
-COPY M T
+NOTE POSITION REGISTER
+NOTE CLONE WILL BE LOCAL
+NOTE M <> 0 IS CHANGE
+NOTE M = 0 IS XMIT+TERM
 
-MARK LOOP
-COPY M X
-TEST X > T
-FJMP NEXT
-
-NOTE SIGNAL INCREASE
+NOTE MAKE CLONE FOR GLBL
+NOTE AND BECOME LOCAL
+REPL LOOP
 MODE
-COPY 0 M
-MODE
-
-MARK NEXT
-COPY X T
-JUMP LOOP
-
-╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
-║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|    __|               ║
-║                 _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |     (                  ║
-║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    \___|               ║
-╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
-
-NOTE INCREASE COUNTER
-NOTE START M LOCAL
-NOTE M=0 INCREASE
-NOTE M=1 DONE
-MARK LOOP
-COPY M T
-TJMP DONE
-ADDI X 1 X
-JUMP LOOP
-
-MARK DONE
 LINK 800
-COPY X #OUTP
+
+NOTE MAIN LOOP
+MARK LOOP
+COPY X T
+ADDI M X X
+TEST T = X
+FJMP LOOP
+
+NOTE GOT XMIT SIGNAL
+COPY X M

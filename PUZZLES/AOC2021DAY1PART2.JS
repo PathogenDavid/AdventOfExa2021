@@ -30,7 +30,7 @@ function initializeTestRun(testRun) {
     var realFile = createNormalFile(sonarController, 200, FILE_ICON_DATA, inputData);
     setFileInitiallyCollapsed(realFile);
     
-    createTable("REPORT", 108, 0, "Calculate the number of depth increases");
+    createTable("REPORT", 108, 0, "Calculate the number of depth increases in a three-sample sliding window");
     addTableOutput("OUTPUT", [1724], createRegister(sonarController, 7, -3, "OUTP"));
 }
 
