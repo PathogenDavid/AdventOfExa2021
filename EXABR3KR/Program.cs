@@ -107,8 +107,15 @@ Console.WriteLine("Disabling Axiom EXA limiter...");
 
 // Get the show simple message box method
 {
-    Type sdl = exapunks.GetType("SDL2.SDL");
+    Type sdl = exapunks.GetType("SDL2.SDL", throwOnError: true);
     Patches.ShowSimpleMessageBox = sdl.GetMethod("SDL_ShowSimpleMessageBox", BindingFlags.Static | BindingFlags.Public) ?? throw new Exception("Could not get SDL_ShowSimpleMessageBox");
+}
+
+// Disable the file size limit
+{
+    Type simFile = exapunks.GetType("SimFile", throwOnError: true);
+    FieldInfo maxFileSize = simFile.GetField("#=qOdpaEje22Qza4ry74TgDTw==", BindingFlags.Public | BindingFlags.Static);
+    maxFileSize.SetValue(null, int.MaxValue);
 }
 
 //==================================================================================================================================
