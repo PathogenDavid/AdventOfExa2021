@@ -1,0 +1,153 @@
+   _____  ____________   _______________ __________________ ________  ___________ _______________  ___  _____
+  /  _  \ \______ \   \ /   /\_   _____/ \      \__    ___/ \_____  \ \_   _____/ \_   _____/\   \/  / /  _  \
+ /  /_\  \ |    |  \   Y   /  |    __)_  /   |   \|    |     /   |   \ |    __)    |    __)_  \     / /  /_\  \
+/    |    \|    `   \     /   |        \/    |    \    |    /    |    \|     \     |        \ /     \/    |    \
+\____|__  /_______  /\___/   /_______  /\____|__  /____|    \_______  /\___  /    /_______  //___/\  \____|__  /
+        \/        \/                 \/         \/                  \/     \/             \/       \_/       \/
+                                    ADVENT OF EXA 2021 DAY 3 PART 1 SOLUTION
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|     \                 ║
+║                _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |      _ \                ║
+║               ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    _/  _\               ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE STREAM READER
+LINK 800
+GRAB 200
+
+NOTE START NEW BIT
+NOTE X=STRIDE
+MARK NEXTBIT
+COPY F T
+FJMP DONE
+SUBI T 1 X
+SEEK -1
+COPY X F
+NOTE READ IN REVERSE
+NOTE TO SIMPLIFY BIN2DEC
+SEEK X
+
+MARK LOOP
+NOTE POP BIT
+COPY F T
+SEEK -1
+VOID F
+
+NOTE 1 -> 1, 0 -> -1
+NOTE AND BROADCAST
+MULI T 2 T
+SUBI T 1 M
+
+NOTE MOVE TO NEXT BIT
+SEEK X
+
+NOTE CHECK FOR EOF
+TEST EOF
+FJMP LOOP
+
+NOTE ADVANCE BIT
+COPY 0 M
+SEEK -2147483648
+JUMP NEXTBIT
+
+MARK DONE
+DROP
+NOTE COLLECT RESULTS
+LINK -1
+NOTE NOOP TO WAIT FOR
+NOTE RESULTS TO SETTLE
+NOTE (MIGHT BE ONE XTRA)
+NOOP
+NOOP
+NOOP
+NOOP
+KILL
+KILL
+KILL
+GRAB 400
+SEEK 2147483647
+SEEK -1
+COPY F X
+DROP
+GRAB 401
+SEEK 2147483647
+SEEK -1
+MULI F X X
+LINK 800
+COPY X #OUTP
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|   _ )                ║
+║                 _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |     _ \                ║
+║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    ___/                ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE STREAM RECEIVER
+NOTE M= 1 FOR 1
+NOTE M=-1 FOR 0
+NOTE M= 0 FOR NEXT BIT
+MARK LOOP
+NOTE READ BIT
+COPY X T
+ADDI X M X
+
+NOTE CHECK IF SAVE
+TEST X = T
+FJMP LOOP
+
+NOTE SAVE
+TEST X > 0
+MODE
+COPY T M
+COPY T M
+MODE
+
+NOTE RESTART
+COPY 0 X
+JUMP LOOP
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|    __|               ║
+║                 _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |     (                  ║
+║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    \___|               ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE GAMMA RECORDER
+NOTE START M LOCAL
+NOTE X IS NEXT BIT POW2
+NOTE F IS RUNNING TOTAL
+MAKE
+COPY 0 F
+SEEK -1
+COPY 1 X
+
+MARK LOOP
+MULI M X T
+ADDI T F F
+SEEK -1
+MULI X 2 X
+JUMP LOOP
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|   _ \                ║
+║                 _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |     |  |               ║
+║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    ___/                ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE EPSILON RECORDER
+NOTE START M LOCAL
+NOTE X IS NEXT BIT POW2
+NOTE F IS RUNNING TOTAL
+MAKE
+COPY 0 F
+SEEK -1
+COPY 1 X
+
+MARK LOOP
+TEST M = 0
+MULI T X T
+ADDI T F F
+SEEK -1
+MULI X 2 X
+JUMP LOOP

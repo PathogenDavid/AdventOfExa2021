@@ -1,0 +1,286 @@
+   _____  ____________   _______________ __________________ ________  ___________ _______________  ___  _____
+  /  _  \ \______ \   \ /   /\_   _____/ \      \__    ___/ \_____  \ \_   _____/ \_   _____/\   \/  / /  _  \
+ /  /_\  \ |    |  \   Y   /  |    __)_  /   |   \|    |     /   |   \ |    __)    |    __)_  \     / /  /_\  \
+/    |    \|    `   \     /   |        \/    |    \    |    /    |    \|     \     |        \ /     \/    |    \
+\____|__  /_______  /\___/   /_______  /\____|__  /____|    \_______  /\___  /    /_______  //___/\  \____|__  /
+        \/        \/                 \/         \/                  \/     \/             \/       \_/       \/
+                                    ADVENT OF EXA 2021 DAY 3 PART 2 SOLUTION
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|     \                 ║
+║                _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |      _ \                ║
+║               ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    _/  _\               ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE DATA READER
+NOTE X=STRIDE
+COPY M X
+MODE
+
+NOTE GO TO HOST
+LINK 800
+
+NOTE REPL
+REPL OTHER
+
+NOTE GRAB FILE AND
+NOTE REWRITE ENTRY 0 TO
+NOTE BE CURRENT BIT IDX
+GRAB 200
+COPY 0 F
+JUMP LOOP
+
+NOTE CO2 SCRUBBER
+MARK OTHER
+GRAB 201
+LINK -1
+COPY 0 F
+
+MARK LOOP
+NOTE READ AND CONVERT
+NOTE 1 -> 1, 0 -> -1
+NOTE AND BROADCAST
+MULI F 2 T
+SUBI T 1 M
+
+NOTE MOVE TO NEXT BIT
+SEEK X
+
+NOTE CHECK FOR EOF
+TEST EOF
+FJMP LOOP
+
+NOTE FILTER VALUES
+SEEK -2147483648
+NOTE SEEK TO CURR BIT
+COPY F X
+SEEK X
+NOTE X=CURR BIT
+MARK FILTERLOOP
+NOTE M=0 TO READ VAL
+COPY 0 M
+TEST F = M
+FJMP REMOVEVALUE
+NOTE SEEK NEXT VALUE
+MODE
+SEEK M
+MODE
+NOTE CHECK EOF
+TEST EOF
+TJMP PREPNEXT
+JUMP FILTERLOOP
+
+MARK REMOVEVALUE
+NOTE SEEK TO START
+MULI X -1 X
+SEEK -1
+SEEK X
+MULI X -1 X
+NOTE REMOVE
+MODE
+ADDI M 1 T
+MODE
+MARK REMOVELOOP
+VOID F
+SUBI T 1 T
+TJMP REMOVELOOP
+
+NOTE FILTER NEXT VALUE
+SEEK X
+TEST EOF
+FJMP FILTERLOOP
+
+NOTE PREP FOR NEXT BIT
+MARK PREPNEXT
+
+NOTE RESET TRACKER
+COPY 1 M
+
+NOTE GET STRIDE
+MODE
+COPY M X
+MODE
+
+NOTE CHECK IF DONE
+SEEK -2147483648
+SEEK X
+SEEK 2
+TEST EOF
+TJMP BIN2DEC
+
+NOTE MOVE TO NEXT BIT
+NOTE AND LOOP
+SEEK -2147483648
+ADDI F 1 T
+SEEK -1
+COPY T F
+SEEK T
+JUMP LOOP
+
+NOTE BINARY TO DECIMAL
+NOTE READ IN REVERSE TO
+NOTE SIMPLFY BIN2DEC EXA
+MARK BIN2DEC
+SEEK -1
+FILE X
+TEST X = 201
+FJMP ISO2
+LINK 800
+MARK ISO2
+LINK X
+MODE
+ADDI M 1 T
+MODE
+MARK BIN2DECLOOP
+COPY F M
+SEEK -2
+SUBI T 1 T
+TJMP BIN2DECLOOP
+
+NOTE CHECK IF WE ARE O2
+NOTE IF SO GET FINAL
+NOTE RESULT AND EMIT
+FILE X
+TEST X = 200
+FJMP DONE
+DROP
+KILL
+GRAB 400
+SEEK 2147483647
+SEEK -1
+COPY F X
+DROP
+LINK -1
+LINK 201
+KILL
+GRAB 401
+SEEK 2147483647
+SEEK -1
+MULI F X X
+LINK -1
+COPY X #OUTP
+
+MARK DONE
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|   _ )                ║
+║                 _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |     _ \                ║
+║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    ___/                ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE O2 GEN BIT TRACKER
+NOTE START M LOCAL
+NOTE M= 1 FOR 1
+NOTE M=-1 FOR 0
+NOTE M= 0 READBACK
+NOTE M= 1 AFTER READBACK
+NOTE      TO RESET
+LINK 800
+
+MARK LOOP
+NOTE READ BIT
+COPY X T
+ADDI X M X
+
+NOTE CHECK IF DONE
+TEST X = T
+FJMP LOOP
+
+NOTE CHECK IF 1 WAS MOST
+NOTE COMMON OR IF BOTH
+NOTE MOST COMMON PREF 1
+NOTE TEST >= 0
+TEST X < 0
+TEST T = 0
+COPY T X
+MARK READBACK
+COPY X M
+COPY M T
+FJMP READBACK
+
+NOTE RESTART
+COPY 0 X
+JUMP LOOP
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|    __|               ║
+║                 _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |     (                  ║
+║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    \___|               ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE CO2 SCR BIT TRACKER
+NOTE START M LOCAL
+NOTE M= 1 FOR 1
+NOTE M=-1 FOR 0
+NOTE M= 0 READBACK
+NOTE M= 1 AFTER READBACK
+NOTE      TO RESET
+MARK LOOP
+NOTE READ BIT
+COPY X T
+ADDI X M X
+
+NOTE CHECK IF DONE
+TEST X = T
+FJMP LOOP
+
+NOTE IF 0 WAS MOST COMMN
+NOTE KEEP 1 OTHERWISE 0
+TEST X < 0
+COPY T X
+MARK READBACK
+COPY X M
+COPY M T
+FJMP READBACK
+
+NOTE RESTART
+COPY 0 X
+JUMP LOOP
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|   _ \                ║
+║                 _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |     |  |               ║
+║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    ___/                ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE STRIDE REGISTER
+LINK 800
+GRAB 200
+SUBI F 1 X
+DROP
+NOTE REPL TO ENSURE QOS
+REPL LOOP
+MARK LOOP
+COPY X M
+JUMP LOOP
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                 __|\ \  / __|  __| |  |__ __|_ _|  _ \   \ |     \   __| __|  \ |__ __|   __|                ║
+║                 _|  >  <  _|  (    |  |   |    |  (   | .  |    _ \ (_ | _|  .  |   |     _|                 ║
+║                ___| _/\_\___|\___|\__/   _|  ___|\___/ _|\_|  _/  _\___|___|_|\_|  _|    ___|                ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+NOTE BINARY TO DECIMAL
+NOTE START M LOCAL
+LINK 800
+NOTE X = CURRENT POW2
+COPY 1 X
+REPL CLONE
+MAKE
+LINK 200
+COPY 0 F
+SEEK -1
+JUMP LOOP
+
+MARK CLONE
+LINK 201
+MAKE
+COPY 0 F
+SEEK -1
+
+MARK LOOP
+MULI M X T
+ADDI T F F
+SEEK -1
+MULI X 2 X
+JUMP LOOP
